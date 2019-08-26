@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".StartActivity"
+    android:orientation="vertical"
+    android:gravity="center"
+    >
+
+    <TextView
+        android:id="@+id/email_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:textSize="15sp"
+        />
+
+    <TextView
+        android:id="@+id/username_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Username"
+        android:textSize="15sp"
+        />
+
+    <TextView
+        android:id="@+id/mobile_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Mobile"
+        android:textSize="15sp"
+        />
+
+    <TextView
+        android:id="@+id/address_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Address"
+        android:textSize="15sp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log Out"
+        android:textSize="40sp"
+        android:onClick="logout"
+        android:layout_marginTop="30dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        android:textSize="40sp"
+        android:onClick="delete"
+        android:layout_marginTop="30dp"
+        />
+
+</LinearLayout>
