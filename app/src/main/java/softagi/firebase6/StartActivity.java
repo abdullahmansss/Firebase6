@@ -1,30 +1,35 @@
 package softagi.firebase6;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
-import softagi.firebase6.Models.UserModel;
+import de.hdodenhof.circleimageview.CircleImageView;
+import softagi.firebase6.Fragments.UsersFragment;
+
 
 public class StartActivity extends AppCompatActivity
 {
-    TextView email_txt,username_txt,mobile_txt,address_txt;
-    String email,username,mobile,address,id;
-
-    FirebaseAuth auth;
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
+    TabLayout tabLayout;
+    ViewPager viewPager;
+    FragmentPagerAdapter fragmentPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -32,68 +37,52 @@ public class StartActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        initViews();
-        getData(id);
-    }
+        tabLayout = findViewById(R.id.tabs);
+        viewPager = findViewById(R.id.viewpager);
 
-    private void getData(String id)
-    {
-        databaseReference.child("Users").child(id).addListenerForSingleValueEvent(new ValueEventListener()
+        fragmentPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager())
         {
+            Fragment [] fragments = new Fragment[]
+                    {
+                            new UsersFragment("users"),
+                            new UsersFragment("friends"),
+                            new UsersFragment("requests")
+                    };
+
+            String [] names = new String[]
+                    {
+                            "USERS",
+                            "FRIENDS",
+                            "REQUESTS"
+                    };
+
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            public Fragment getItem(int position)
             {
-                UserModel userModel = dataSnapshot.getValue(UserModel.class);
-
-                email = userModel.getEmail();
-                username = userModel.getUsername();
-                mobile = userModel.getMobile();
-                address = userModel.getAddress();
-
-                email_txt.setText(email);
-                username_txt.setText(username);
-                mobile_txt.setText(mobile);
-                address_txt.setText(address);
+                return fragments[position];
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError)
+            public int getCount()
             {
-
+                return fragments.length;
             }
-        });
-    }
 
-    private void initViews()
-    {
-        email_txt = findViewById(R.id.email_txt);
-        username_txt = findViewById(R.id.username_txt);
-        mobile_txt = findViewById(R.id.mobile_txt);
-        address_txt = findViewById(R.id.address_txt);
+            @Nullable
+            @Override
+            public CharSequence getPageTitle(int position)
+            {
+                return names[position];
+            }
+        };
 
-        auth  = FirebaseAuth.getInstance();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-
-        id = auth.getUid();
+        viewPager.setAdapter(fragmentPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
     public void onBackPressed()
     {
         finishAffinity();
-    }
-
-    public void logout(View view)
-    {
-        FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-        finish();
-    }
-
-    public void delete(View view)
-    {
-        databaseReference.child("Users").child(id).removeValue();
-
     }
 }
